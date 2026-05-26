@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { EmptyState } from "./empty-state";
 
 export function ModulePage({
