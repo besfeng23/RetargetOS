@@ -1,20 +1,32 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
-import { Pool } from "pg";
+type PrismaLike = unknown;
 
 declare global {
-  var prisma: PrismaClient | undefined;
+  // eslint-disable-next-line no-var
+  var __retargetosPrisma: PrismaLike | undefined;
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  max: 5,
-});
+export async function getPrisma() {
+  if (global.__retargetosPrisma) {
+    return global.__retargetosPrisma;
+  }
 
-const adapter = new PrismaPg(pool);
+  const [{ PrismaPg }, { PrismaClient }, { Pool }] = await Promise.all([
+    import("@prisma/adapter-pg"),
+    import("@prisma/client"),
+    import("pg"),
+  ]);
 
-export const prisma = global.prisma ?? new PrismaClient({ adapter });
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    max: 5,
+  });
 
-if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
+  const adapter = new PrismaPg(pool);
+  const client = new PrismaClient({ adapter });
+
+  if (process.env.NODE_ENV !== "production") {
+    global.__retargetosPrisma = client;
+  }
+
+  return client;
 }
