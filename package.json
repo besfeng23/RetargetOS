@@ -14,26 +14,26 @@
     "prisma:validate": "prisma validate"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "latest",
-    "@prisma/client": "latest",
-    "clsx": "latest",
-    "lucide-react": "latest",
-    "next": "latest",
-    "pg": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "zod": "latest"
+    "@prisma/adapter-pg": "6.19.0",
+    "@prisma/client": "6.19.0",
+    "clsx": "2.1.1",
+    "lucide-react": "0.468.0",
+    "next": "15.5.6",
+    "pg": "8.13.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "latest",
-    "@types/node": "latest",
-    "@types/pg": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "eslint": "latest",
-    "eslint-config-next": "latest",
-    "prisma": "latest",
-    "tailwindcss": "latest",
-    "typescript": "latest"
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/node": "22.10.2",
+    "@types/pg": "8.11.10",
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.2",
+    "eslint": "9.39.1",
+    "eslint-config-next": "15.5.6",
+    "prisma": "6.19.0",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.7.2"
   }
 }
