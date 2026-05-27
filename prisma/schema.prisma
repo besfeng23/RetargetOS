@@ -1,0 +1,378 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RiskLevel {
+  low
+  medium
+  high
+  blocked
+  quarantined
+}
+
+enum ConsentStatus {
+  granted
+  denied
+  unknown
+  revoked
+  expired
+  needs_review
+}
+
+enum SuppressionStatus {
+  not_suppressed
+  suppressed
+}
+
+enum ConnectorMode {
+  mock
+  sandbox
+  read_only
+  approval_required
+  guarded_autopilot
+}
+
+enum DestinationPlatform {
+  meta
+  tiktok
+  google
+  x
+  shopee
+  lazada
+  tiktok_shop
+  meta_catalog
+  affiliate_network
+  payment_provider
+  speedypay
+  custom_webhook
+}
+
+enum SyncJobStatus {
+  draft
+  pending_approval
+  queued
+  running
+  success
+  partial_success
+  failed
+  cancelled
+  blocked_by_consent
+  blocked_by_suppression
+  blocked_by_policy
+  blocked_by_missing_credentials
+  mock_completed
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id          String   @id @default(cuid())
+  workspaceId String
+  emailHash   String?  @unique
+  role        String   @default("admin")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DataSource {
+  id             String    @id @default(cuid())
+  workspaceId    String
+  name           String
+  type           String
+  description    String?
+  sourceOwner    String?
+  riskLevel      RiskLevel @default(medium)
+  allowedUse     String    @default("unknown_needs_review")
+  status         String    @default("needs_review")
+  lastImportedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model ImportBatch {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  dataSourceId    String?
+  fileName        String?
+  fileUrl         String?
+  status          String   @default("draft")
+  totalRows       Int      @default(0)
+  processedRows   Int      @default(0)
+  successRows     Int      @default(0)
+  failedRows      Int      @default(0)
+  quarantinedRows Int      @default(0)
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ImportRecord {
+  id                String            @id @default(cuid())
+  workspaceId       String
+  importBatchId     String
+  dataSourceId      String?
+  rawDataJson       Json?
+  normalizedDataJson Json?
+  processingStatus  String            @default("pending")
+  errorMessage      String?
+  profileId         String?
+  consentStatus     ConsentStatus     @default(unknown)
+  suppressionStatus SuppressionStatus  @default(not_suppressed)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model Profile {
+  id                String            @id @default(cuid())
+  workspaceId       String
+  displayName       String?
+  lifecycleStage    String            @default("unknown")
+  country           String?
+  city              String?
+  totalSpent        Float             @default(0)
+  purchaseCount     Int               @default(0)
+  lastActivityAt    DateTime?
+  consentSummary    ConsentStatus     @default(unknown)
+  suppressionStatus SuppressionStatus  @default(not_suppressed)
+  riskLevel         RiskLevel          @default(medium)
+  deletedAt         DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model IdentityKey {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  profileId       String
+  keyType         String
+  keyHash         String
+  confidenceScore Float    @default(0)
+  source          String?
+  firstSeenAt     DateTime?
+  lastSeenAt      DateTime?
+  createdAt       DateTime @default(now())
+
+  @@index([workspaceId, keyType, keyHash])
+}
+
+model PiiVaultRecord {
+  id             String   @id @default(cuid())
+  workspaceId    String
+  profileId      String?
+  fieldType      String
+  encryptedValue String
+  keyVersion     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model ConsentLedgerEntry {
+  id                 String        @id @default(cuid())
+  workspaceId         String
+  profileId           String
+  consentType         String
+  status              ConsentStatus @default(unknown)
+  source              String?
+  consentTextVersion  String?
+  capturedAt          DateTime?
+  expiresAt           DateTime?
+  jurisdiction        String?
+  notes               String?
+  createdAt           DateTime      @default(now())
+}
+
+model SuppressionEntry {
+  id              String   @id @default(cuid())
+  workspaceId      String
+  profileId        String?
+  suppressionType  String
+  reason           String?
+  source           String?
+  createdBy        String?
+  expiresAt        DateTime?
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+}
+
+model AudienceSegment {
+  id                  String   @id @default(cuid())
+  workspaceId          String
+  name                String
+  description         String?
+  rulesJson           Json?
+  exclusionsJson      Json?
+  status              String   @default("draft")
+  estimatedTotalCount Int      @default(0)
+  eligibleCount       Int      @default(0)
+  suppressedCount     Int      @default(0)
+  missingConsentCount Int      @default(0)
+  lastCalculatedAt    DateTime?
+  createdBy           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model DestinationAccount {
+  id                 String              @id @default(cuid())
+  workspaceId         String
+  platform            DestinationPlatform
+  displayName         String
+  externalAccountId   String?
+  connectionStatus    String             @default("mock")
+  mode                ConnectorMode      @default(mock)
+  permissionsJson     Json?
+  scopesJson          Json?
+  tokenStatus         String?
+  tokenExpiresAt      DateTime?
+  lastValidatedAt     DateTime?
+  lastSyncAt          DateTime?
+  createdBy           String?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  disconnectedAt      DateTime?
+}
+
+model DestinationSyncJob {
+  id                   String              @id @default(cuid())
+  workspaceId           String
+  destinationAccountId  String?
+  platform              DestinationPlatform
+  segmentId             String?
+  syncType              String
+  status                SyncJobStatus       @default(draft)
+  mode                  ConnectorMode       @default(mock)
+  requestedBy           String?
+  approvedBy            String?
+  startedAt             DateTime?
+  completedAt           DateTime?
+  recordsTotal          Int                 @default(0)
+  recordsEligible       Int                 @default(0)
+  recordsExcluded       Int                 @default(0)
+  recordsAdded          Int                 @default(0)
+  recordsRemoved        Int                 @default(0)
+  recordsFailed         Int                 @default(0)
+  estimatedMatchRate    Float?
+  reportedMatchRate     Float?
+  errorCount            Int                 @default(0)
+  lastError             String?
+  payloadHash           String?
+  idempotencyKey        String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+}
+
+model EventRecord {
+  id                String   @id @default(cuid())
+  workspaceId       String
+  profileId         String?
+  anonymousId       String?
+  eventName         String
+  eventTime         DateTime
+  source            String?
+  platform          String?
+  campaignId        String?
+  creativeId        String?
+  audienceId        String?
+  productId         String?
+  offerId           String?
+  value             Float?
+  currency          String?
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  utmContent        String?
+  utmTerm           String?
+  clickId           String?
+  externalEventId   String?
+  ipHash            String?
+  userAgentHash     String?
+  consentSnapshotId String?
+  metadataJson      Json?
+  createdAt         DateTime @default(now())
+}
+
+model Payment {
+  id                String   @id @default(cuid())
+  workspaceId       String
+  profileId         String?
+  eventId           String?
+  paymentProvider   String?
+  externalPaymentId String?
+  amount            Float
+  currency          String   @default("PHP")
+  status            String   @default("pending")
+  campaignId        String?
+  offerId           String?
+  productId         String?
+  paidAt            DateTime?
+  metadataJson      Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  sku         String?
+  category    String?
+  price       Float?
+  cost        Float?
+  margin      Float?
+  inventory   Int?
+  status      String   @default("draft")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Offer {
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  offerType   String
+  price       Float?
+  payout      Float?
+  margin      Float?
+  status      String   @default("draft")
+  riskLevel   RiskLevel @default(medium)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Creative {
+  id             String   @id @default(cuid())
+  workspaceId    String
+  platform       String?
+  creativeType   String
+  hook           String?
+  body           String?
+  approvalStatus String   @default("draft")
+  riskLevel      RiskLevel @default(medium)
+  aiGenerated    Boolean  @default(false)
+  createdBy      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  actorUserId   String?
+  action        String
+  entityType    String
+  entityId      String?
+  metadataJson  Json?
+  ipHash        String?
+  userAgentHash String?
+  createdAt     DateTime @default(now())
+}
