@@ -4,6 +4,7 @@ import {
   Cable,
   ClipboardCheck,
   Database,
+  FileText,
   FileUp,
   Gauge,
   Megaphone,
@@ -16,7 +17,7 @@ import {
 } from "lucide-react";
 
 export const APP_NAME = "RetargetOS";
-export const CURRENT_PHASE = "mvp-command-shell";
+export const CURRENT_PHASE = "premium-command-center";
 
 export const riskLevels = ["low", "medium", "high", "blocked", "quarantined"] as const;
 export type RiskLevel = (typeof riskLevels)[number];
@@ -48,28 +49,65 @@ export type DestinationPlatform = (typeof destinationPlatforms)[number];
 
 export const navGroups = [
   {
-    label: "RetargetOS Build Flow",
+    label: "Growth Command",
     items: [
-      { title: "1. Dashboard", href: "/dashboard", icon: Gauge },
-      { title: "2. Data Sources", href: "/data-sources", icon: Database },
-      { title: "3. Imports", href: "/imports", icon: FileUp },
-      { title: "4. Profiles", href: "/profiles", icon: Users },
-      { title: "5. Consent & Suppression", href: "/consent-suppression", icon: ShieldCheck },
-      { title: "6. Audiences", href: "/audiences", icon: ClipboardCheck },
-      { title: "7. Destinations / Mock Sync", href: "/destinations", icon: Cable },
-      { title: "8A. Products", href: "/products", icon: Package },
-      { title: "8B. Offers", href: "/offers", icon: ReceiptText },
-      { title: "9. Creative Studio", href: "/creative-studio", icon: Palette },
-      { title: "10. Campaigns", href: "/campaigns", icon: Megaphone },
-      { title: "11. Events", href: "/events", icon: Activity },
-      { title: "12. AI Copilot", href: "/ai-copilot", icon: Bot },
+      { title: "Dashboard", href: "/dashboard", icon: Gauge },
+      { title: "AI Copilot", href: "/ai-copilot", icon: Bot },
+      { title: "Reports", href: "/reports", icon: FileText },
     ],
   },
   {
-    label: "System",
+    label: "Data",
+    items: [
+      { title: "Data Sources", href: "/data-sources", icon: Database },
+      { title: "Imports", href: "/imports", icon: FileUp },
+      { title: "Profiles", href: "/profiles", icon: Users },
+      { title: "Consent & Suppression", href: "/consent-suppression", icon: ShieldCheck },
+      { title: "Events", href: "/events", icon: Activity },
+    ],
+  },
+  {
+    label: "Activation",
+    items: [
+      { title: "Audiences", href: "/audiences", icon: ClipboardCheck },
+      { title: "Destinations", href: "/destinations", icon: Cable },
+      { title: "Campaigns", href: "/campaigns", icon: Megaphone },
+    ],
+  },
+  {
+    label: "Monetization",
+    items: [
+      { title: "Creative Studio", href: "/creative-studio", icon: Palette },
+      { title: "Products", href: "/products", icon: Package },
+      { title: "Offers", href: "/offers", icon: ReceiptText },
+    ],
+  },
+  {
+    label: "Governance",
     items: [{ title: "Settings", href: "/settings", icon: Settings }],
   },
 ];
+
+export const mobilePrimaryRoutes = [
+  { title: "Home", href: "/dashboard", icon: Gauge },
+  { title: "Audiences", href: "/audiences", icon: ClipboardCheck },
+  { title: "Campaigns", href: "/campaigns", icon: Megaphone },
+  { title: "Activity", href: "/events", icon: Activity },
+] as const;
+
+export const mobileMoreRoutes = [
+  { title: "Data Sources", href: "/data-sources", icon: Database },
+  { title: "Imports", href: "/imports", icon: FileUp },
+  { title: "Profiles", href: "/profiles", icon: Users },
+  { title: "Consent & Suppression", href: "/consent-suppression", icon: ShieldCheck },
+  { title: "Destinations", href: "/destinations", icon: Cable },
+  { title: "Products", href: "/products", icon: Package },
+  { title: "Offers", href: "/offers", icon: ReceiptText },
+  { title: "Creative Studio", href: "/creative-studio", icon: Palette },
+  { title: "Events", href: "/events", icon: Activity },
+  { title: "AI Copilot", href: "/ai-copilot", icon: Bot },
+  { title: "Settings", href: "/settings", icon: Settings },
+] as const;
 
 export const moduleRoutes = navGroups.flatMap((group) => group.items);
 

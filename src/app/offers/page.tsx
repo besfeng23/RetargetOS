@@ -1,39 +1,15 @@
-import { ApiEndpointPanel } from "@/components/api-endpoint-panel";
 import { AppShell } from "@/components/app-shell";
-import { ModulePage } from "@/components/module-page";
-import { OpsTable } from "@/components/ops-table";
-import { endpointActions, productOfferRows } from "@/lib/mock-data";
+import { ActionCard } from "@/components/action-card";
+import { PageHeader } from "@/components/page-header";
+import { PrimaryCTA } from "@/components/primary-cta";
+import { SectionCard } from "@/components/section-card";
+
+const offers = [
+  { title: "Comeback bundle margin offer", description: "Type: merchant bundle · Payout/margin pending · Conversion rate unknown · Refund risk medium · Audience fit: lapsed buyers", status: "review" },
+  { title: "Repermission incentive", description: "Type: consent recovery · Margin controlled · Restrictions: lawful contact only · Audience fit: needs repermission", status: "guarded" },
+  { title: "Affiliate finance lead", description: "Type: affiliate · Payout based · Conversion rate unknown · Refund/compliance risk high · Audience fit restricted", status: "high risk" },
+];
 
 export default function OffersPage() {
-  return (
-    <AppShell>
-      <ModulePage
-        title="Offers"
-        eyebrow="8 / 12 · Offer economics"
-        description="Offer library foundation for products, bundles, merchant campaigns, affiliate offers, payout, approval rate, refund risk, and audience fit. High payout does not equal good profit."
-      >
-        <OpsTable rows={productOfferRows} />
-
-        <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
-          <p className="text-sm font-semibold text-white">Offer score inputs</p>
-          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {[
-              "Audience fit",
-              "Gross margin / payout",
-              "Conversion rate",
-              "Approval rate",
-              "Refund risk",
-              "Compliance risk",
-              "Landing page quality",
-              "Payout delay",
-            ].map((item) => (
-              <div key={item} className="rounded-xl border border-slate-800 bg-slate-900/60 p-3 text-sm text-slate-300">{item}</div>
-            ))}
-          </div>
-        </div>
-
-        <ApiEndpointPanel actions={endpointActions.createRecord} />
-      </ModulePage>
-    </AppShell>
-  );
+  return <AppShell><div className="space-y-6"><PageHeader title="Offers" eyebrow="Commercial matching" description="Match offers to eligible audiences with payout, margin, conversion, refund risk, restrictions, and fit visible up front." action={<PrimaryCTA>Add Offer</PrimaryCTA>} /><SectionCard title="Offer library"><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{offers.map((offer)=><ActionCard key={offer.title} {...offer} />)}</div></SectionCard></div></AppShell>;
 }

@@ -1,43 +1,20 @@
-import { ApiEndpointPanel } from "@/components/api-endpoint-panel";
 import { AppShell } from "@/components/app-shell";
-import { ModulePage } from "@/components/module-page";
-import { OpsTable } from "@/components/ops-table";
-import { endpointActions, eventRows } from "@/lib/mock-data";
+import { MetricCard } from "@/components/metric-card";
+import { PageHeader } from "@/components/page-header";
+import { RecordsView } from "@/components/records-view";
+import { SectionCard } from "@/components/section-card";
 
-const trackingChecks = [
-  "Unique event_id / deduplication key",
-  "UTM source, medium, campaign, content, term",
-  "Click IDs: fbclid, gclid, ttclid, xclid",
-  "Profile or anonymous ID",
-  "Consent snapshot",
-  "Value and currency for money events",
-  "Refund and chargeback events",
-  "Server-side forwarding disabled until allowed",
+const events = [
+  { event_type: "PageView", source: "web pixel", quality: "needs click id", use: "retargeting seed", pii: "masked" },
+  { event_type: "ViewContent", source: "web pixel", quality: "medium", use: "product intent", pii: "masked" },
+  { event_type: "Lead", source: "form", quality: "consent required", use: "lead scoring", pii: "masked" },
+  { event_type: "InitiateCheckout", source: "checkout", quality: "high", use: "abandoned checkout", pii: "masked" },
+  { event_type: "Purchase", source: "payment webhook", quality: "highest", use: "payment truth", pii: "masked" },
+  { event_type: "Refund", source: "payment ledger", quality: "highest", use: "net profit", pii: "masked" },
+  { event_type: "Chargeback", source: "payment ledger", quality: "system critical", use: "suppression", pii: "masked" },
+  { event_type: "OptOut", source: "preference center", quality: "system critical", use: "suppression", pii: "masked" },
 ];
 
 export default function EventsPage() {
-  return (
-    <AppShell>
-      <ModulePage
-        title="Events"
-        eyebrow="11 / 12 · Attribution layer"
-        description="Events prove what people did, where they came from, what they clicked, what they bought, and whether revenue is real. Payment truth beats vanity attribution."
-      >
-        <OpsTable rows={eventRows} />
-
-        <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
-          <p className="text-sm font-semibold text-white">Event quality checklist</p>
-          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {trackingChecks.map((check) => (
-              <div key={check} className="rounded-xl border border-slate-800 bg-slate-900/60 p-3 text-sm text-slate-300">
-                {check}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <ApiEndpointPanel actions={endpointActions.events} />
-      </ModulePage>
-    </AppShell>
-  );
+  return <AppShell><div className="space-y-6"><PageHeader title="Events" eyebrow="Attribution health" description="Events show what happened, which critical signals are missing, and whether revenue is supported by payment truth rather than vanity attribution." /><section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><MetricCard title="Event health score" value="72" status="review" note="Improves when critical payment and opt-out events are complete." /><MetricCard title="Missing critical events" value="2" status="warning" note="Review Refund and Chargeback coverage." /><MetricCard title="Duplicate rate" value="0%" status="ready" note="Awaiting real event volume." /><MetricCard title="Payment truth" value="required" status="guarded" note="Purchase, Refund, and Chargeback drive net profit." /></section><SectionCard title="Event stream"><RecordsView rows={events} titleKey="event_type" subtitleKey="source" /></SectionCard><SectionCard title="Top event types" description="PageView, ViewContent, Lead, InitiateCheckout, Purchase, Refund, Chargeback, and OptOut are tracked as activation and suppression inputs." ><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{events.map((e)=><div key={e.event_type} className="rounded-2xl border border-white/[0.08] bg-[#0D0D0D] p-4 text-sm text-white/72">{e.event_type}</div>)}</div></SectionCard></div></AppShell>;
 }

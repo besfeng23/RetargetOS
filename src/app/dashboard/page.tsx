@@ -1,52 +1,47 @@
-import { ApiEndpointPanel } from "@/components/api-endpoint-panel";
 import { AppShell } from "@/components/app-shell";
-import { Card } from "@/components/card";
-import { ModulePage } from "@/components/module-page";
-import { OpsTable } from "@/components/ops-table";
-import { dashboardMetrics, endpointActions, audienceRows, campaignRows } from "@/lib/mock-data";
-import { nonNegotiableRules } from "@/lib/retargetos-config";
+import { ActionCard } from "@/components/action-card";
+import { ComplianceBanner } from "@/components/compliance-banner";
+import { MetricCard } from "@/components/metric-card";
+import { PageHeader } from "@/components/page-header";
+import { ReadinessChecklist } from "@/components/readiness-checklist";
+import { SectionCard } from "@/components/section-card";
+import { StatusChip } from "@/components/status-chip";
+
+const metrics = [
+  { title: "Revenue", value: "₱0", note: "Payment ledger baseline; no demo revenue is claimed.", status: "payment truth" },
+  { title: "Net Profit", value: "₱0", note: "Revenue less costs, refunds, fees, and approved spend.", status: "calculated" },
+  { title: "Consent-safe Profiles", value: "0", note: "Unknown consent blocks activation.", status: "guarded" },
+  { title: "Launch-ready Audiences", value: "0", note: "Requires consent, source trust, suppression, and approval gates.", status: "draft" },
+];
+
+const attention = [
+  { title: "Missing consent", description: "Profiles with unknown consent are blocked until repermission or lawful basis is recorded.", status: "blocked" },
+  { title: "Suppressed records", description: "Suppressed profiles stay excluded from every audience and destination workflow.", status: "dominant rule" },
+  { title: "Failed imports", description: "Invalid identifiers and unmapped fields stay in quarantine preview.", status: "review" },
+  { title: "Tracking gaps", description: "Purchase, Refund, Chargeback, and OptOut events are required for payment truth.", status: "warning" },
+];
 
 export default function DashboardPage() {
   return (
     <AppShell>
-      <ModulePage
-        title="Dashboard"
-        eyebrow="1 / 12 · Revenue command"
-        description="Money, data health, consent safety, audience readiness, and next action. This page is wired to the RetargetOS dashboard Edge Function and must never become a vanity dashboard."
-      >
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {dashboardMetrics.map((metric) => (
-            <Card key={metric.title} title={metric.title} metric={metric.metric} note={metric.note} />
-          ))}
-        </div>
-
-        <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-lg font-semibold text-white">Best immediate opportunity</h2>
-              <p className="mt-1 text-sm text-slate-400">Launch only after consent, suppression, destination eligibility, tracking, and approval checks pass.</p>
-            </div>
-            <OpsTable rows={audienceRows.slice(0, 3)} />
-          </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
-            <p className="text-sm font-semibold text-white">Operating rules</p>
-            <div className="mt-4 space-y-3">
-              {nonNegotiableRules.map((rule) => (
-                <div key={rule} className="rounded-xl border border-slate-800 bg-slate-900/60 p-3 text-sm text-slate-300">
-                  {rule}
-                </div>
-              ))}
-            </div>
-          </div>
+      <div className="space-y-6">
+        <PageHeader title="Growth Command" eyebrow="Dashboard" description="What matters now: revenue truth, consent-safe reach, activation blockers, and the next approval-gated move." />
+        <ComplianceBanner />
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{metrics.map((metric) => <MetricCard key={metric.title} {...metric} />)}</section>
+        <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          <SectionCard title="Needs attention" description="Activation stays blocked until these operational issues are resolved.">
+            <div className="grid gap-3 sm:grid-cols-2">{attention.map((item) => <ActionCard key={item.title} {...item} />)}</div>
+          </SectionCard>
+          <SectionCard title="Best next move" description="AI can draft recommendations, but cannot spend, sync, publish, or change suppression without human approval.">
+            <ActionCard title="Prepare abandoned checkout recovery" meta="Approval required" status="draft only" description="Build a 7-day abandoned checkout audience, exclude suppressed profiles, verify consent/source trust, and draft creative variants for review.">
+              <div className="flex flex-wrap gap-2"><StatusChip value="No live sync" tone="warning" /><StatusChip value="No budget change" tone="danger" /><StatusChip value="Human approval required" tone="warning" /></div>
+            </ActionCard>
+          </SectionCard>
         </section>
-
-        <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-white">Campaign draft queue</h2>
-          <OpsTable rows={campaignRows} />
-        </section>
-
-        <ApiEndpointPanel actions={endpointActions.dashboard} />
-      </ModulePage>
+        <SectionCard title="Campaign and audience health" description="Readiness is intentionally conservative. Suppression and unknown consent remain hard blockers.">
+          <ReadinessChecklist items={[{ label: "Audience validation pending", state: "warning" }, { label: "Consent gate enforced", state: "passed" }, { label: "Suppression override enforced", state: "passed" }, { label: "Mock connectors only — no live platform upload occurred", state: "blocked" }]} />
+        </SectionCard>
+      </div>
     </AppShell>
   );
 }
