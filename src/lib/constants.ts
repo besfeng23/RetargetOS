@@ -28,7 +28,7 @@ export type ConsentStatus = (typeof consentStatuses)[number];
 export const suppressionStatuses = ["not_suppressed", "suppressed"] as const;
 export type SuppressionStatus = (typeof suppressionStatuses)[number];
 
-export const connectorModes = ["mock", "sandbox", "read_only", "approval_required", "guarded_autopilot"] as const;
+export const connectorModes = ["sandbox", "read_only", "approval_required", "guarded_autopilot"] as const;
 export type ConnectorMode = (typeof connectorModes)[number];
 
 export const destinationPlatforms = [

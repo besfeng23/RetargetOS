@@ -1,10 +1,7 @@
-import { AppShell } from "@/components/app-shell";
-import { ModulePage } from "@/components/module-page";
+export const dynamic = "force-dynamic";
 
-export default function AuditLogsPage() {
-  return (
-    <AppShell>
-      <ModulePage title="Audit Logs" description="Sensitive actions must be recorded, including imports, consent changes, suppression changes, audience previews, mock sync jobs, and AI recommendations." />
-    </AppShell>
-  );
+import { LiveModulePage } from "@/components/live/live-module-page";
+
+export default function Page() {
+  return <LiveModulePage moduleKey="auditLogs" />;
 }

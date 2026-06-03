@@ -1,9 +1,9 @@
 export type DestinationPlatform = "meta" | "tiktok" | "google" | "x";
 
-export type MockHealth = {
+export type ConnectorHealth = {
   platform: DestinationPlatform;
-  mode: "mock";
-  connected: false;
+  mode: "sandbox" | "read_only" | "approval_required" | "guarded_autopilot";
+  connected: boolean;
   message: string;
 };
 
@@ -20,15 +20,15 @@ export type AudienceValidationResult = {
   message: string;
 };
 
-export type MockSyncJob = {
+export type SyncJob = {
   platform: DestinationPlatform;
-  status: "mock_completed" | "blocked";
+  status: "queued" | "approval_required" | "blocked";
   message: string;
 };
 
-export type MockConnector = {
+export type GuardedConnector = {
   platform: DestinationPlatform;
   validateAudience(input: AudienceValidationInput): AudienceValidationResult;
-  createMockSyncJob(input: AudienceValidationInput): MockSyncJob;
-  fetchMockHealth(): MockHealth;
+  createSyncJob(input: AudienceValidationInput): SyncJob;
+  fetchHealth(): ConnectorHealth;
 };

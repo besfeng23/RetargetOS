@@ -8,7 +8,7 @@
 - Prisma
 - PostgreSQL target
 - Zod dependency available for later validation work
-- Mock connector architecture only
+- Guarded connector architecture only
 
 ## Current phase
 
@@ -29,7 +29,7 @@ This repository is initialized for Phase 0 / Phase 1 foundation only.
 - Data source, imports, profiles, consent/suppression, audience, destination, events, creative, campaign, product, offer, marketplace, reports, AI copilot, audit logs, and settings pages exist.
 - Health API exists.
 - Prisma schema includes the core Phase 1 models.
-- Mock connector types and implementation exist.
+- Guarded connector types and implementation exist.
 - Activation eligibility helper exists.
 
 ## Missing foundation after this PR
