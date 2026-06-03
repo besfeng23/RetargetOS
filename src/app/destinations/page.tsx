@@ -1,26 +1,12 @@
-import { ApiEndpointPanel } from "@/components/api-endpoint-panel";
 import { AppShell } from "@/components/app-shell";
-import { ModulePage } from "@/components/module-page";
-import { OpsTable } from "@/components/ops-table";
-import { destinationRows, endpointActions } from "@/lib/mock-data";
+import { ActionCard } from "@/components/action-card";
+import { ComplianceBanner } from "@/components/compliance-banner";
+import { PageHeader } from "@/components/page-header";
+import { SectionCard } from "@/components/section-card";
+import { StatusChip } from "@/components/status-chip";
+
+const destinations = ["Meta", "TikTok", "Google", "X", "Payment provider"];
 
 export default function DestinationsPage() {
-  return (
-    <AppShell>
-      <ModulePage
-        title="Destinations / Mock Sync"
-        eyebrow="7 / 12 · Connector hub"
-        description="Destination cards are mock-mode only until official API credentials, permission review, audience validation, suppression sync, and approval workflows are complete."
-      >
-        <OpsTable rows={destinationRows} />
-
-        <div className="rounded-2xl border border-amber-500/20 bg-amber-950/20 p-5">
-          <p className="text-sm font-semibold text-amber-100">Mock sync warning</p>
-          <p className="mt-2 text-sm leading-6 text-amber-100/80">A mock sync job proves the workflow only. It does not upload records to Meta, TikTok, Google, X, Shopee, Lazada, affiliate networks, or payment providers.</p>
-        </div>
-
-        <ApiEndpointPanel actions={endpointActions.destinations} />
-      </ModulePage>
-    </AppShell>
-  );
+  return <AppShell><div className="space-y-6"><PageHeader title="Destinations" eyebrow="Mock sync hub" description="Connector readiness is visible without implying live ad-platform uploads. Every connector remains mock or approval-gated." /><ComplianceBanner title="Mock connector only. No live platform sync occurred." message="Destination cards can draft sync jobs and show blockers; they do not upload audiences to live platforms." /><SectionCard title="Connector hub"><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{destinations.map((name)=><ActionCard key={name} title={name} meta="Destination" status="mock" description="Supported actions: readiness review, draft mapping, mock sync job, audit note."><div className="grid gap-2 text-sm text-white/58"><span>Last sync: never</span><span>Readiness blockers: consent preview, suppression exclusions, human approval</span><StatusChip value="Mock connector only. No live platform sync occurred." tone="warning" /></div></ActionCard>)}</div></SectionCard></div></AppShell>;
 }

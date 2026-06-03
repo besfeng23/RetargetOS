@@ -1,44 +1,20 @@
-import { ApiEndpointPanel } from "@/components/api-endpoint-panel";
 import { AppShell } from "@/components/app-shell";
-import { ModulePage } from "@/components/module-page";
-import { OpsTable } from "@/components/ops-table";
-import { consentRows, endpointActions } from "@/lib/mock-data";
+import { ComplianceBanner } from "@/components/compliance-banner";
+import { PageHeader } from "@/components/page-header";
+import { RecordsView } from "@/components/records-view";
+import { SectionCard } from "@/components/section-card";
+import { StatusChip } from "@/components/status-chip";
 
-const suppressionRules = [
-  "Global opt-out blocks all activation.",
-  "Email unsubscribe blocks email campaigns and can block matching where required.",
-  "Custom audience opt-out blocks Meta, TikTok, Google, X, and lookalike seeds.",
-  "Refund, dispute, and chargeback exclusions protect margin.",
-  "Deleted or deletion-requested profiles must not be used for marketing.",
+const consent = [
+  { consent_type: "custom audience activation", status: "granted", source: "Merchant CSV", timestamp: "2026-06-03", jurisdiction: "PH", expiry: "2027-06-03" },
+  { consent_type: "retargeting", status: "unknown", source: "Unknown legacy leads", timestamp: "not recorded", jurisdiction: "unknown", expiry: "blocked" },
+  { consent_type: "sms marketing", status: "revoked", source: "Preference center", timestamp: "2026-05-22", jurisdiction: "PH", expiry: "revoked" },
+];
+const suppression = [
+  { suppression_type: "global opt out", reason: "user opt out", applies_to: "all destinations", active_status: "active", source: "Preference center", timestamp: "2026-05-22" },
+  { suppression_type: "chargeback", reason: "payment dispute", applies_to: "paid media", active_status: "active", source: "Payment ledger", timestamp: "2026-05-30" },
 ];
 
 export default function ConsentSuppressionPage() {
-  return (
-    <AppShell>
-      <ModulePage
-        title="Consent & Suppression"
-        eyebrow="5 / 12 · Activation gatekeeper"
-        description="This page protects the product. Unknown consent blocks activation. Suppression overrides consent, audience rules, AI recommendations, and profit potential."
-      >
-        <OpsTable rows={consentRows} />
-
-        <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-2xl border border-red-500/20 bg-red-950/20 p-5">
-            <p className="text-sm font-semibold text-red-100">Suppression override</p>
-            <p className="mt-2 text-sm leading-6 text-red-100/80">A suppressed profile must be excluded from audience sync, campaign launch, AI activation recommendations, email/SMS campaigns, affiliate targeting, marketplace retargeting, and lookalike seed creation.</p>
-          </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
-            <p className="text-sm font-semibold text-white">Suppression types to support</p>
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              {suppressionRules.map((rule) => (
-                <div key={rule} className="rounded-xl border border-slate-800 bg-slate-900/60 p-3 text-sm text-slate-300">{rule}</div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <ApiEndpointPanel actions={endpointActions.consent} />
-      </ModulePage>
-    </AppShell>
-  );
+  return <AppShell><div className="space-y-6"><PageHeader title="Consent & Suppression" eyebrow="Gatekeeper" description="Activation eligibility is decided here. Unknown consent blocks activation, and suppression overrides every other rule." /><ComplianceBanner /><div className="flex flex-wrap gap-2"><StatusChip value="Consent" tone="success" /><StatusChip value="Suppression" tone="danger" /><StatusChip value="Unknown consent blocks activation" tone="warning" /></div><SectionCard title="Consent ledger"><RecordsView rows={consent} titleKey="consent_type" subtitleKey="status" /></SectionCard><SectionCard title="Suppression ledger" className="border-red-300/20 bg-red-500/[0.04]"><RecordsView rows={suppression} titleKey="suppression_type" subtitleKey="reason" /></SectionCard></div></AppShell>;
 }

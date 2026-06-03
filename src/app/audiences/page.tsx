@@ -1,42 +1,19 @@
-import { ApiEndpointPanel } from "@/components/api-endpoint-panel";
 import { AppShell } from "@/components/app-shell";
-import { ModulePage } from "@/components/module-page";
-import { OpsTable } from "@/components/ops-table";
-import { audienceRows, endpointActions } from "@/lib/mock-data";
+import { ActionCard } from "@/components/action-card";
+import { ComplianceBanner } from "@/components/compliance-banner";
+import { MetricCard } from "@/components/metric-card";
+import { PageHeader } from "@/components/page-header";
+import { PrimaryCTA } from "@/components/primary-cta";
+import { RecordsView } from "@/components/records-view";
+import { SectionCard } from "@/components/section-card";
 
-const presets = [
-  "7-day abandoned checkout",
-  "30-day hot leads",
-  "14-day product viewers",
-  "Existing buyers suppression",
-  "High-LTV buyers",
-  "Needs repermission",
+const presets = ["7-day abandoned checkout", "30-day hot leads", "14-day product viewers", "existing buyers", "high-LTV buyers", "needs repermission"];
+const audiences = [
+  { audience: "7-day abandoned checkout", total: "0", eligible: "0", missing_consent: "0", suppressed: "0", invalid_identifiers: "0", restricted_source: "0", status: "draft" },
+  { audience: "Needs repermission", total: "0", eligible: "0", missing_consent: "0", suppressed: "0", invalid_identifiers: "0", restricted_source: "0", status: "review" },
 ];
+const flow = ["Choose preset", "Define rules", "Define exclusions", "Preview eligibility", "Destination fit", "Save draft"];
 
 export default function AudiencesPage() {
-  return (
-    <AppShell>
-      <ModulePage
-        title="Audiences"
-        eyebrow="6 / 12 · Consent-safe segments"
-        description="Build audiences from clean, consent-safe, suppression-safe profiles. Always show usable count, not vanity total size."
-      >
-        <OpsTable rows={audienceRows} />
-
-        <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
-          <p className="text-sm font-semibold text-white">MVP audience presets</p>
-          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {presets.map((preset) => (
-              <div key={preset} className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                <p className="text-sm font-medium text-slate-200">{preset}</p>
-                <p className="mt-2 text-xs text-slate-500">Requires consent, suppression, identifier, and destination eligibility checks.</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <ApiEndpointPanel actions={endpointActions.audiences} />
-      </ModulePage>
-    </AppShell>
-  );
+  return <AppShell><div className="space-y-6"><PageHeader title="Audiences" eyebrow="Consent-safe builder" description="Build profit-focused segments that respect source trust, consent, identifier quality, and suppression before destination fit." action={<PrimaryCTA>Save Draft</PrimaryCTA>} /><ComplianceBanner /><SectionCard title="Builder flow"><div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">{flow.map((step)=><div key={step} className="rounded-[22px] border border-white/[0.08] bg-[#0D0D0D] p-4 text-sm text-white/76">{step}</div>)}</div></SectionCard><SectionCard title="Presets"><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{presets.map((preset)=><ActionCard key={preset} title={preset} status="draft" description="Preset is a starting point only; eligibility preview must pass before activation." />)}</div></SectionCard><section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">{["total","eligible","missing consent","suppressed","invalid identifiers","restricted source"].map((x)=><MetricCard key={x} title={x} value="0" status={x.includes("suppressed")||x.includes("missing")||x.includes("restricted")?"blocker":"preview"} />)}</section><SectionCard title="Eligibility preview"><RecordsView rows={audiences} titleKey="audience" subtitleKey="status" /></SectionCard></div></AppShell>;
 }
