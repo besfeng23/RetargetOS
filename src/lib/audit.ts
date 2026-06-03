@@ -3,7 +3,7 @@ export type AuditAction =
   | "consent_change"
   | "suppression_change"
   | "audience_preview"
-  | "mock_sync_job"
+  | "sync_job"
   | "ai_recommendation_generated";
 
 export function maskForAudit(value: string) {

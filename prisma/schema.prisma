@@ -30,7 +30,6 @@ enum SuppressionStatus {
 }
 
 enum ConnectorMode {
-  mock
   sandbox
   read_only
   approval_required
@@ -65,7 +64,7 @@ enum SyncJobStatus {
   blocked_by_suppression
   blocked_by_policy
   blocked_by_missing_credentials
-  mock_completed
+  approval_recorded
 }
 
 model Workspace {
@@ -228,8 +227,8 @@ model DestinationAccount {
   platform            DestinationPlatform
   displayName         String
   externalAccountId   String?
-  connectionStatus    String             @default("mock")
-  mode                ConnectorMode      @default(mock)
+  connectionStatus    String             @default("approval_required")
+  mode                ConnectorMode      @default(approval_required)
   permissionsJson     Json?
   scopesJson          Json?
   tokenStatus         String?
@@ -250,7 +249,7 @@ model DestinationSyncJob {
   segmentId             String?
   syncType              String
   status                SyncJobStatus       @default(draft)
-  mode                  ConnectorMode       @default(mock)
+  mode                  ConnectorMode       @default(approval_required)
   requestedBy           String?
   approvedBy            String?
   startedAt             DateTime?

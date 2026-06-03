@@ -1,5 +1,5 @@
 import { StatusPill } from "./status-pill";
-import type { TableRow } from "@/lib/mock-data";
+import type { TableRow } from "@/lib/live-types";
 
 function looksLikeStatus(key: string) {
   return ["risk", "status", "consent", "suppression", "mode", "approval", "quarantine", "quality"].some((word) => key.toLowerCase().includes(word));

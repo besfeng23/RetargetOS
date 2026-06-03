@@ -7,7 +7,7 @@ function toneFor(value: string): Tone {
   if (normalized.includes("not suppressed") || normalized.includes("not_suppressed")) return "success";
   if (["suppressed", "blocked", "revoked", "denied", "chargeback", "failed", "quarantined"].some((word) => normalized.includes(word))) return "danger";
   if (["unknown", "review", "draft", "pending", "missing", "approval", "medium"].some((word) => normalized.includes(word))) return "warning";
-  if (["mock", "read", "masked", "safe", "ready", "granted", "active", "passed", "low"].some((word) => normalized.includes(word))) return "success";
+  if (["read", "masked", "safe", "ready", "granted", "active", "passed", "low"].some((word) => normalized.includes(word))) return "success";
   if (["info", "sandbox"].some((word) => normalized.includes(word))) return "info";
   return "neutral";
 }

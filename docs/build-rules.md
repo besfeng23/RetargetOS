@@ -16,7 +16,7 @@ Build only the foundation:
 6. Consent Ledger
 7. Suppression Registry
 8. Audience Preview
-9. Mock Destinations
+9. Guarded Destinations
 10. Audit Logs
 
 ## Non-negotiables
@@ -28,13 +28,13 @@ Build only the foundation:
 - No raw personal data in logs.
 - No secrets in client-side code.
 - Official APIs only.
-- Mock connector actions must be clearly labeled as mock.
+- Guarded connector actions must be clearly labeled as approval-gated.
 - No fake sync claims.
 - AI cannot upload audiences, spend money, publish campaigns, change budgets, or remove suppression without approval.
 
 ## Connector rules
 
-Phase 1 uses mock connectors only. The UI may show Meta, TikTok, Google, and X as mock destinations, but it must never imply a live platform sync occurred.
+Phase 1 uses guarded connectors only. The UI may show Meta, TikTok, Google, and X as guarded destinations, but it must never imply a live platform sync occurred.
 
 ## Infrastructure rule
 

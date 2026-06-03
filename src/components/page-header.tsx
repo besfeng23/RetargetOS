@@ -7,7 +7,7 @@ export function PageHeader({ title, description, eyebrow, action }: { title: str
       <div className="min-w-0">
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <StatusChip value="Operator workspace" tone="neutral" />
-          <StatusChip value="Mock connectors only" tone="warning" />
+          <StatusChip value="Live Supabase gated" tone="warning" />
           {eyebrow ? <StatusChip value={eyebrow} tone="info" /> : null}
         </div>
         <h1 className="text-[32px] font-semibold tracking-[-0.05em] text-white/95 sm:text-4xl lg:text-[42px]">{title}</h1>

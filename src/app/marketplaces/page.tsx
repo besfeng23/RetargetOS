@@ -1,10 +1,7 @@
-import { AppShell } from "@/components/app-shell";
-import { ModulePage } from "@/components/module-page";
+export const dynamic = "force-dynamic";
 
-export default function MarketplacesPage() {
-  return (
-    <AppShell>
-      <ModulePage title="Marketplaces" description="Marketplace foundation for official channels, listings, orders, inventory, profit, and later approved connector workflows." />
-    </AppShell>
-  );
+import { LiveModulePage } from "@/components/live/live-module-page";
+
+export default function Page() {
+  return <LiveModulePage moduleKey="marketplaces" />;
 }

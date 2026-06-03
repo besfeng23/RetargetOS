@@ -1,5 +1,5 @@
 import { retargetosFunctions } from "@/lib/retargetos-config";
-import type { ActionEndpoint } from "@/lib/mock-data";
+import type { ActionEndpoint } from "@/lib/live-types";
 
 export function ApiEndpointPanel({ actions }: { actions: ActionEndpoint[] }) {
   return (

@@ -18,7 +18,7 @@ The first build priority is:
 - Consent Ledger
 - Suppression Registry
 - Audience Preview
-- Mock Destinations
+- Guarded Destinations
 - Audit Logs
 
 ## Non-negotiables
@@ -30,7 +30,7 @@ The first build priority is:
 - No raw personal data in logs.
 - No secrets or tokens in client-side code.
 - Official APIs only.
-- Mock connector actions must be clearly labeled as mock.
+- Guarded connector actions must be clearly labeled as approval-gated.
 - No fake sync claims.
 - AI cannot upload audiences, spend money, publish campaigns, change budgets, or remove suppression without approval.
 
@@ -55,7 +55,7 @@ Verification commands:
 ## Build order
 
 1. Data foundation plus consent and suppression
-2. Audience builder plus mock connectors
+2. Audience builder plus guarded connectors
 3. Event and conversion tracking
 4. AI Copilot plus Creative Studio
 5. Real Meta, TikTok, Google, and X connectors

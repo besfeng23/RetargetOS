@@ -11,7 +11,7 @@ export const retargetosFunctions = {
   importBatch: `${RETARGETOS_FUNCTION_BASE_URL}/retargetos-import`,
   profile: `${RETARGETOS_FUNCTION_BASE_URL}/retargetos-profile`,
   suppression: `${RETARGETOS_FUNCTION_BASE_URL}/rt-suppress`,
-  mockSync: `${RETARGETOS_FUNCTION_BASE_URL}/rt-sync-job`,
+  syncJob: `${RETARGETOS_FUNCTION_BASE_URL}/rt-sync-job`,
   createRecord: `${RETARGETOS_FUNCTION_BASE_URL}/rt-create`,
 } as const;
 
@@ -22,7 +22,7 @@ export const buildOrder = [
   "Profiles",
   "Consent & Suppression",
   "Audiences",
-  "Destinations / Mock Sync",
+  "Destinations / Guarded Sync",
   "Products / Offers",
   "Creative Studio",
   "Campaigns",
@@ -35,7 +35,7 @@ export const nonNegotiableRules = [
   "Unknown consent blocks activation.",
   "Unknown source blocks activation.",
   "No raw PII in logs or client-visible tables.",
-  "Mock sync is not a live platform upload.",
+  "Destination sync requires approved live connector support.",
   "AI can recommend and draft, but cannot spend, publish, upload, or remove suppression without approval.",
 ] as const;
 

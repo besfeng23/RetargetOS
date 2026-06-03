@@ -6,7 +6,7 @@ Dashboard, Data Sources, Imports, Profiles, Consent and Suppression, Audiences, 
 
 ## Foundation present
 
-App shell, sidebar, topbar, basic cards, risk badge, empty state, table component, health API, eligibility helper, mock connector contract, mock connector implementation, audit helper, validation helper, Prisma helper, and Prisma schema.
+App shell, sidebar, topbar, basic cards, risk badge, empty state, table component, health API, eligibility helper, guarded connector contract, guarded connector implementation, audit helper, validation helper, Prisma helper, and Prisma schema.
 
 ## Local verification still required
 
