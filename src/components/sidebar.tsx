@@ -3,10 +3,11 @@ import { navGroups } from "@/lib/constants";
 
 export function Sidebar() {
   return (
-    <aside className="hidden min-h-screen w-72 border-r border-slate-800 bg-slate-950/90 p-5 lg:block">
+    <aside className="hidden min-h-screen w-72 shrink-0 overflow-y-auto border-r border-slate-800 bg-slate-950/90 p-5 lg:block">
       <div className="mb-8">
         <p className="text-xs uppercase tracking-[0.3em] text-slate-500">RetargetOS</p>
         <h1 className="mt-2 text-xl font-semibold text-white">Growth Command</h1>
+        <p className="mt-2 text-xs leading-5 text-slate-500">Data → consent → audience → creative → campaign → revenue.</p>
       </div>
       <nav className="space-y-6">
         {navGroups.map((group) => (
