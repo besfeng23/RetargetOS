@@ -1,0 +1,26 @@
+{
+  "name": "@retargetos/worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bullmq": "^5.0.0",
+    "redis": "^4.6.0",
+    "@repo/db": "*",
+    "@repo/queue": "*",
+    "@repo/consent": "*",
+    "@repo/events": "*",
+    "@repo/audiences": "*",
+    "@repo/connectors": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0"
+  }
+}

@@ -1,70 +1,135 @@
-# RetargetOS / AI GrowthOS
+# AI GrowthOS / RetargetOS
 
-RetargetOS is an AI-powered first-party data activation and monetization platform.
+A first-party data activation and revenue intelligence platform for merchants, e-commerce sellers, and agencies.
 
-It turns existing customer data, old leads, ad history, website and app events, marketplace activity, affiliate offers, product catalogs, and payment or conversion data into measurable revenue and net profit.
+## Overview
 
-## Current phase
+AI GrowthOS is a consent-safe, profit-driven system that converts existing customer and lead data into measurable revenue through intelligent audience building, campaign orchestration, and attribution tracking.
 
-Phase 0 / Phase 1 foundation only.
+### Core Capabilities
 
-The first build priority is:
+- **Data Foundation**: Unified profile management with consent tracking and suppression enforcement
+- **Identity Resolution**: Multi-channel identity matching (email, phone, external IDs) with deduplication
+- **Audience Building**: Consent-safe, suppression-aware audience segmentation
+- **Platform Connectors**: Direct integration with Meta, TikTok, Google, and X
+- **Event Tracking**: Server-side conversion attribution with revenue reconciliation
+- **AI Copilot**: Intelligent campaign recommendations and performance analysis
 
-- Data Sources
-- Imports
-- Profiles
-- Identity Keys
-- PII Vault
-- Consent Ledger
-- Suppression Registry
-- Audience Preview
-- Guarded Destinations
-- Audit Logs
+### Key Architecture Principles
 
-## Non-negotiables
+- **Suppression First**: Suppressed profiles never activate, regardless of consent or business logic
+- **Consent Enforcement**: Unknown consent defaults to blocked (no activation)
+- **Profit-Driven**: All optimizations target net profit, not vanity metrics
+- **Audit Trail**: All sensitive actions logged with PII masking
+- **Production-Grade**: Idempotent jobs, exponential backoff, graceful degradation
 
-- Suppression overrides everything.
-- Unknown consent blocks activation.
-- Unknown source blocks activation.
-- No dirty or unconsented activation.
-- No raw personal data in logs.
-- No secrets or tokens in client-side code.
-- Official APIs only.
-- Guarded connector actions must be clearly labeled as approval-gated.
-- No fake sync claims.
-- AI cannot upload audiences, spend money, publish campaigns, change budgets, or remove suppression without approval.
+## Tech Stack
 
-## Local setup
+- **Frontend/Backend**: Next.js 14+ (App Router)
+- **Database**: Supabase (PostgreSQL)
+- **ORM**: Drizzle ORM
+- **Queuing**: BullMQ + Redis
+- **Monorepo**: Turborepo
+- **Language**: TypeScript (Strict Mode)
 
-Run install, generate Prisma client, then start the app.
+## Project Structure
 
-Commands:
+```
+retargetos/
+├── apps/
+│   ├── web/                 # Next.js application (client/server)
+│   └── worker/              # Background job processor
+├── packages/
+│   ├── db/                  # Drizzle ORM schemas and client
+│   ├── queue/               # BullMQ queue definitions and job types
+│   ├── consent/             # Consent/suppression enforcement
+│   ├── events/              # Event tracking taxonomy
+│   ├── audiences/           # Audience building logic
+│   ├── identity/            # Identity resolution engine
+│   ├── connectors/          # Platform connector implementations
+│   ├── ai/                  # AI copilot and recommendations
+│   └── monetization/        # Revenue and profit calculations
+└── docs/
+    └── specifications/      # Product and technical specifications
+```
 
-- pnpm install
-- cp .env.example .env
-- pnpm db:generate
-- pnpm dev
+## Quick Start
 
-Verification commands:
+### Prerequisites
 
-- pnpm lint
-- pnpm typecheck
-- pnpm build
-- pnpm prisma:validate
+- Node.js 18+
+- pnpm (recommended) or npm
+- PostgreSQL 14+ (via Supabase)
+- Redis instance (local Docker or cloud provider)
 
-## Build order
+### Installation
 
-1. Data foundation plus consent and suppression
-2. Audience builder plus guarded connectors
-3. Event and conversion tracking
-4. AI Copilot plus Creative Studio
-5. Real Meta, TikTok, Google, and X connectors
-6. Marketplace, affiliate, payment attribution, and profit engine
+```bash
+# Clone the repository
+git clone https://github.com/besfeng23/RetargetOS.git
+cd RetargetOS
 
-## Infrastructure note
+# Install dependencies
+pnpm install
 
-Vercel is the cockpit, not the whole engine. Heavy imports, sync jobs, event forwarding, analytics, AI batch work, and attribution processing should later run through queues and workers.
+# Create environment file
+cp .env.example .env.local
 
-## Warning
+# Configure your environment variables
+nano .env.local
+```
 
-Do not build live ad-platform sync before the data foundation, consent and suppression enforcement, eligibility logic, audit logs, and approval gates are stable.
+### Development
+
+```bash
+# Start all development servers
+pnpm dev
+
+# The web application runs on http://localhost:3000
+# The worker begins processing jobs from BullMQ queues
+```
+
+## Core Workflows
+
+### 1. Data Import and Profile Resolution
+
+1. User uploads CSV file via web interface
+2. Ingestion worker normalizes and validates records
+3. Processing worker resolves identities and deduplicates
+4. Profiles created with identity keys
+
+### 2. Audience Building and Sync
+
+1. User defines audience rules in web interface
+2. Audience builder applies filters (consent, suppression, segmentation)
+3. Activation worker syncs to external platform via connector
+4. Platform-specific match rate and error tracking recorded
+
+### 3. Event Attribution
+
+1. Customer performs action (purchase, lead submission, etc.)
+2. Server-side event is captured
+3. Event service links to campaign, creative, and audience
+4. Revenue is attributed and profit calculated
+
+## Safety Guarantees
+
+### Suppression Enforcement
+
+Profiles marked as suppressed are never activated, regardless of audience inclusion rules, consent status, AI recommendations, campaign objectives, or revenue potential.
+
+### Consent Validation
+
+Activation only proceeds if consent is explicitly granted for the destination channel, not expired, not revoked, and with unknown consent defaulting to blocked.
+
+### Audit Trail
+
+All sensitive operations are logged. Audit logs never contain raw PII (emails, phone numbers, addresses are hashed or masked).
+
+## Contributing
+
+Please refer to CONTRIBUTING.md for development guidelines, code standards, and pull request procedures.
+
+## License
+
+This project is proprietary and confidential.

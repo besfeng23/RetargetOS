@@ -1,41 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "module": "ESNext",
     "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@repo/db": ["packages/db/index.ts"],
+      "@repo/queue": ["packages/queue/index.ts"],
+      "@repo/consent": ["packages/consent/index.ts"],
+      "@repo/events": ["packages/events/index.ts"],
+      "@repo/audiences": ["packages/audiences/index.ts"],
+      "@repo/identity": ["packages/identity/index.ts"],
+      "@repo/connectors": ["packages/connectors/index.ts"],
+      "@repo/ai": ["packages/ai/index.ts"],
+      "@repo/monetization": ["packages/monetization/index.ts"]
     }
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }

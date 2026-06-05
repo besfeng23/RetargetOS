@@ -1,6 +1,49 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
 node_modules/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Build outputs
+dist/
+build/
 .next/
 out/
-.env*
-*.tsbuildinfo
-.vercel/
+.turbo/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.log
+
+# Database and migrations
+migrations/
+*.db
+*.sql
+
+# Testing
+coverage/
+.nyc_output/
+
+# Runtime
+tmp/
+temp/
+*.pid
+
+# Supabase
+.supabase/
+
+# Redis
+dump.rdb
+
+# OS-specific
+Thumbs.db

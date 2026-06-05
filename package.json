@@ -1,47 +1,28 @@
 {
   "name": "retargetos",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "AI GrowthOS / RetargetOS - First-party data activation platform",
   "private": true,
-  "type": "module",
-  "engines": {
-    "node": "22.x"
-  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio",
-    "prisma:validate": "prisma validate"
-  },
-  "dependencies": {
-    "@prisma/adapter-pg": "6.19.0",
-    "@prisma/client": "6.19.0",
-    "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.107.0",
-    "clsx": "2.1.1",
-    "lucide-react": "0.468.0",
-    "next": "16.2.7",
-    "pg": "8.13.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-hook-form": "^7.77.0",
-    "zod": "3.25.76"
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "type-check": "turbo run type-check",
+    "lint": "turbo run lint",
+    "db:push": "turbo run db:push",
+    "db:migrate": "turbo run db:migrate"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "3.3.1",
-    "@tailwindcss/postcss": "4.1.17",
-    "@types/node": "22.10.2",
-    "@types/pg": "8.11.10",
-    "@types/react": "19.0.8",
-    "@types/react-dom": "19.0.3",
-    "eslint": "9.39.1",
-    "eslint-config-next": "16.2.7",
-    "prisma": "6.19.0",
-    "tailwindcss": "4.1.17",
-    "typescript": "5.7.2"
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "turbo": "^2.9.16",
+    "typescript": "^5.3.3"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "next": "14.2.35"
   }
 }
