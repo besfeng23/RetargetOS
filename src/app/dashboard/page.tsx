@@ -1,50 +1,70 @@
-export const dynamic = "force-dynamic";
 
-import { AppShell } from "@/components/app-shell";
-import { ActionCard } from "@/components/action-card";
-import { ComplianceBanner } from "@/components/compliance-banner";
-import { MetricCard } from "@/components/metric-card";
-import { PageHeader } from "@/components/page-header";
-import { ReadinessChecklist } from "@/components/readiness-checklist";
-import { SectionCard } from "@/components/section-card";
-import { StatusChip } from "@/components/status-chip";
-import { fetchDashboardMetrics } from "@/lib/supabase/queries";
+import React, { useState, useEffect } from 'react';
+import { 
+  LayoutGrid, Palette, Users, DollarSign, 
+  TrendingUp, TrendingDown, Minus, CheckCircle2, AlertCircle,
+  Sparkles, ChevronRight, Bell, ArrowUpRight, ArrowDownRight, 
+  Briefcase, Menu, X, SlidersHorizontal, ArrowRight, Search,
+  Activity, Command, Settings
+} from 'lucide-react';
 
-export default async function DashboardPage() {
-  const metrics = await fetchDashboardMetrics();
+// --- MOCK DATA ---
+const MOCK_BRIEF = {
+  bestOpportunity: { campaign: 'Summer Sale', impact: '+$5,520 Rev', type: 'scale' },
+  biggestWaste: { campaign: 'Cold Traffic Test', impact: '-$3,100 Loss', type: 'pause' },
+};
 
-  return (
-    <AppShell>
-      <div className="space-y-6">
-        <PageHeader title="Growth Command" eyebrow="Dashboard" description="Live Supabase KPIs for revenue truth, consent-safe reach, activation blockers, and the next approval-gated move." />
-        <ComplianceBanner title="Dashboard uses aggregate Supabase queries." message="Counts come from campaigns, events, audiences, consent rules, and import jobs. No static KPI rows are rendered." />
-        {metrics.error ? <div className="rounded-[22px] border border-red-300/25 bg-red-500/[0.08] p-4 text-sm leading-6 text-red-100">Supabase error: {metrics.error}</div> : null}
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          <MetricCard title="Active campaigns" value={String(metrics.activeCampaigns)} note="Count of approved, ready, or active campaigns." status="live" />
-          <MetricCard title="Conversion events" value={String(metrics.conversionEvents)} note="Purchase, Lead, and InitiateCheckout events." status="events" />
-          <MetricCard title="Audience size" value={String(metrics.audienceSize)} note="Sum of eligible_count from paginated audience aggregates." status="guarded" />
-          <MetricCard title="Suppression count" value={String(metrics.suppressionCount)} note="Active, revoked, or suppressed consent rules." status="dominant rule" />
-          <MetricCard title="Import queue" value={String(metrics.queuedImports)} note="Draft, mapping, review, and processing import jobs." status="queue" />
-        </section>
-        <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-          <SectionCard title="Needs attention" description="Activation stays blocked until live data satisfies these operational gates.">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <ActionCard title="Suppression rules" description="Suppressed and revoked records are excluded from every audience and destination workflow." status={metrics.suppressionCount > 0 ? "review" : "clear"} />
-              <ActionCard title="Import queue" description="Unmapped, failed, or review-state batches should be resolved before activation." status={metrics.queuedImports > 0 ? "pending" : "clear"} />
-              <ActionCard title="Conversion coverage" description="Purchase and opt-out facts drive payment truth, eligibility, and suppression reporting." status={metrics.conversionEvents > 0 ? "live" : "waiting"} />
-              <ActionCard title="Campaign approvals" description="Campaign records remain approval-gated before spend or connector execution." status={metrics.activeCampaigns > 0 ? "ready" : "draft"} />
-            </div>
-          </SectionCard>
-          <SectionCard title="Best next move" description="AI can draft recommendations, but execution stays blocked unless approved backend support exists.">
-            <ActionCard title="Prepare highest-fit recovery flow" meta="Approval required" status="draft only" description="Use the live audience, suppression, event, and campaign records to prepare a recovery campaign for human review.">
-              <div className="flex flex-wrap gap-2"><StatusChip value="No auto-publish" tone="warning" /><StatusChip value="No budget change" tone="danger" /><StatusChip value="Human approval required" tone="warning" /></div>
-            </ActionCard>
-          </SectionCard>
-        </section>
-        <SectionCard title="Campaign and audience health" description="Readiness is intentionally conservative. Suppression and unknown consent remain hard blockers.">
-          <ReadinessChecklist items={[{ label: "Audience validation uses live audience rows", state: metrics.audienceSize > 0 ? "passed" : "warning" }, { label: "Consent and suppression gates enforced by RLS-backed tables", state: "passed" }, { label: "Import queue reviewed before activation", state: metrics.queuedImports > 0 ? "warning" : "passed" }, { label: "Creative approval is explicit before deployment", state: "passed" }]} />
-        </SectionCard>
-      </div>
-    </AppShell>
-  );
-}
+const MOCK_METRICS = {
+  totalSpend: 15400, totalRevenue: 48200, netProfit: 12800, roas: 3.13,
+};
+
+const MOCK_CAMPAIGNS = [
+  { id: 'c1', name: 'Summer Sale Campaign', status: 'active', spend: 5200, revenue: 18400, roas: 3.54, trend: 'improving', action: 'Scale +25%' },
+  { id: 'c2', name: 'Cold Traffic Test', status: 'active', spend: 3100, revenue: 1850, roas: 0.60, trend: 'declining', action: 'Pause' },
+  { id: 'c3', name: 'Retargeting Sequence', status: 'active', spend: 4200, revenue: 16800, roas: 4.00, trend: 'stable', action: null },
+  { id: 'c4', name: 'Win-back Offer', status: 'paused', spend: 1200, revenue: 2100, roas: 1.75, trend: 'declining', action: 'Audit' },
+];
+
+const MOCK_RECOMMENDATIONS = [
+  {
+    id: 'r1', type: 'scale', title: 'Scale High-Performing Campaign',
+    desc: 'Summer Sale Campaign is achieving 3.54 ROAS with an improving trend.',
+    rationale: 'ROAS exceeds the 2.5x profitability threshold. Trend analysis shows decreasing CPA over the last 4 days.',
+    impact: { rev: 5520, profit: 3200 }, req: 1300,
+    confidence: 'high', status: 'pending'
+  },
+  {
+    id: 'r2', type: 'pause', title: 'Pause Underperforming Ad Sets',
+    desc: 'Cold Traffic Test is operating at a severe loss with 0.60 ROAS.',
+    rationale: 'Cost of acquisition ($85) is triple the target margin. Continuing spend will compound daily losses.',
+    impact: { rev: 0, profit: 3100 }, req: 0,
+    confidence: 'high', status: 'pending'
+  }
+];
+
+const NAV_ITEMS = [
+  { id: 'overview', label: 'Dashboard', icon: LayoutGrid },
+  { id: 'recommendations', label: 'Insights', icon: Sparkles, badge: 2 },
+  { id: 'audiences', label: 'Audiences', icon: Users },
+  { id: 'creatives', label: 'Creatives', icon: Palette },
+  { id: 'financial', label: 'Financials', icon: DollarSign },
+];
+
+// --- APPLE-STYLE UI COMPONENTS ---
+
+const Card = ({ children, className = '', noPadding = false }) => (
+  <div className={`bg-white/70 backdrop-blur-3xl rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.03)] ring-1 ring-black/[0.03] ${noPadding ? '' : 'p-7 md:p-8'} ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = 'gray', className = '' }) => {
+  const styles = {
+    green: 'bg-[#34c759]/10 text-[#248a3d]',
+    red: 'bg-[#ff3b30]/10 text-[#c9241b]',
+    orange: 'bg-[#ff9500]/10 text-[#b36800]',
+    blue: 'bg-[#0071e3]/10 text-[#0052a3]',
+    gray: 'bg-gray-100 text-gray-600',
+  };
+  return <span className={`px-3 py-1 text-sm font-semibold rounded-full ${styles[variant]} ${className}`}>{children}</span>;
+};

@@ -4,7 +4,7 @@ export function GET() {
   return NextResponse.json({
     status: "ok",
     app: "RetargetOS",
-    phase: "phase-1-foundation",
+    phase: "phase-2-data-sources-and-audit-logs",
     liveConnectorsEnabled: false,
   });
 }

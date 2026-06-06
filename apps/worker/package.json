@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "bullmq": "^5.0.0",
-    "redis": "^4.6.0",
+    "redis": "^5.0.0",
     "@repo/db": "*",
     "@repo/queue": "*",
     "@repo/consent": "*",

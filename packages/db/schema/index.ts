@@ -36,3 +36,6 @@ export const events = pgTable('events', {
   properties: jsonb('properties'),
   createdAt: timestamp('created_at').defaultNow(),
 });
+
+export * from './data-sources';
+export * from './audit-logs';
